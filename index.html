@@ -12,6 +12,12 @@
             text-align: center;
             margin: 20px;
         }
+        video {
+            width: 300px;
+            height: 300px;
+            border: 1px solid black;
+            margin: 10px 0;
+        }
         #output {
             margin-top: 20px;
         }
@@ -19,10 +25,13 @@
 </head>
 <body>
     <h1>Railway Ticket Verification</h1>
-    <p>Enter your Ticket ID and upload your photo:</p>
+    <p>Enter your Ticket ID and use the webcam to capture your photo:</p>
     <input type="text" id="ticketID" placeholder="Enter Ticket ID" required>
-    <input type="file" id="photoInput" accept="image/*" required>
-    <button onclick="verifyTicket()">Verify Ticket</button>
+    <div>
+        <video id="webcam" autoplay></video>
+        <br>
+        <button onclick="captureAndVerify()">Capture & Verify</button>
+    </div>
     <div id="output"></div>
     <script src="script.js"></script>
 </body>
