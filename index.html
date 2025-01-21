@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railway Ticket Verification</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Railway Ticket Verification</h1>
+    <p>Enter your Ticket ID and upload your photo:</p>
+    <input type="text" id="ticketID" placeholder="Enter Ticket ID" required>
+    <input type="file" id="photoInput" accept="image/*" required>
+    <button onclick="verifyTicket()">Verify Ticket</button>
+    <div id="output"></div>
+    <script src="script.js"></script>
+</body>
+</html>
