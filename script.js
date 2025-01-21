@@ -1,4 +1,4 @@
-let model;
+let model, webcamStream;
 
 async function loadModel() {
     const modelURL = "https://YOUR_GITHUB_REPOSITORY_URL/model.json"; // Replace with the actual model.json URL
@@ -6,15 +6,31 @@ async function loadModel() {
 
     // Load the Teachable Machine model
     model = await tmImage.load(modelURL, metadataURL);
+    setupWebcam();
 }
 
-async function verifyTicket() {
+function setupWebcam() {
+    const webcamElement = document.getElementById("webcam");
+
+    // Access the webcam
+    navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+            webcamStream = stream;
+            webcamElement.srcObject = stream;
+        })
+        .catch((err) => {
+            console.error("Error accessing webcam: ", err);
+        });
+}
+
+async function captureAndVerify() {
     const ticketID = document.getElementById("ticketID").value;
-    const photoInput = document.getElementById("photoInput").files[0];
+    const webcamElement = document.getElementById("webcam");
     const output = document.getElementById("output");
 
-    if (!ticketID || !photoInput) {
-        alert("Please provide both Ticket ID and a photo.");
+    if (!ticketID) {
+        alert("Please enter your Ticket ID.");
         return;
     }
 
@@ -32,29 +48,28 @@ async function verifyTicket() {
         return;
     }
 
-    // Read the uploaded image for face verification
-    const img = new Image();
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-        img.src = event.target.result;
+    // Capture image from the webcam
+    const canvas = document.createElement("canvas");
+    canvas.width = webcamElement.videoWidth;
+    canvas.height = webcamElement.videoHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(webcamElement, 0, 0, canvas.width, canvas.height);
+    const capturedImage = canvas;
 
-        img.onload = async () => {
-            const prediction = await model.predict(img);
+    // Verify face using the Teachable Machine model
+    const prediction = await model.predict(capturedImage);
 
-            // Find the highest probability label
-            const highestPrediction = prediction.reduce((prev, current) =>
-                prev.probability > current.probability ? prev : current
-            );
+    // Find the highest probability label
+    const highestPrediction = prediction.reduce((prev, current) =>
+        prev.probability > current.probability ? prev : current
+    );
 
-            // Match the face recognition label with the Ticket ID
-            if (highestPrediction.probability > 0.8 && highestPrediction.className === ticketID) {
-                output.textContent = `Ticket verified for ${passenger.name} (ID: ${ticketID}).`;
-            } else {
-                output.textContent = "Face verification failed. Please check your photo.";
-            }
-        };
-    };
-    reader.readAsDataURL(photoInput);
+    // Match the face recognition label with the Ticket ID
+    if (highestPrediction.probability > 0.8 && highestPrediction.className === ticketID) {
+        output.textContent = `Ticket verified for ${passenger.name} (ID: ${ticketID}).`;
+    } else {
+        output.textContent = "Face verification failed. Please try again.";
+    }
 }
 
 // Load the Teachable Machine model when the page loads
