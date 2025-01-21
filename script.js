@@ -2,7 +2,7 @@ let model, webcamStream;
 
 async function loadModel() {
     const modelURL = "https://YOUR_GITHUB_REPOSITORY_URL/model.json"; // Replace with the actual model.json URL
-    const metadataURL = "https://YOUR_GITHUB_REPOSITORY_URL/metadata.json"; // Replace with the actual metadata.json URL
+    const metadataURL = "https://raw.githubusercontent.com/Ganesh-PROJECT/Smart-Indian-Railway-Passenger-ticket-verification/refs/heads/main/tm-my-image-model%20(5)/metadata.json"; // Replace with the actual metadata.json URL
 
     // Load the Teachable Machine model
     model = await tmImage.load(modelURL, metadataURL);
