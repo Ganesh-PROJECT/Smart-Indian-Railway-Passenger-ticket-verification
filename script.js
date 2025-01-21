@@ -14,13 +14,14 @@ function setupWebcam() {
 
     // Access the webcam
     navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ video: true }) // Request access to the webcam
         .then((stream) => {
-            webcamStream = stream;
-            webcamElement.srcObject = stream;
+            webcamElement.srcObject = stream; // Set webcam video stream as the video element source
+            webcamElement.play(); // Start playing the video
         })
         .catch((err) => {
             console.error("Error accessing webcam: ", err);
+            alert("Unable to access the camera. Please check your browser settings.");
         });
 }
 
